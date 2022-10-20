@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.os.Bundle;
 import android.view.DragEvent;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -31,14 +32,14 @@ public class ItemDetailFragment extends Fragment {
     /**
      * The placeholder content this fragment is presenting.
      */
-    private Content.PlaceholderItem mItem;
+    private ContentController.PlaceholderItem mItem;
     private CollapsingToolbarLayout mToolbarLayout;
     private TextView mTextView;
 
     private final View.OnDragListener dragListener = (v, event) -> {
         if (event.getAction() == DragEvent.ACTION_DROP) {
             ClipData.Item clipDataItem = event.getClipData().getItemAt(0);
-            mItem = Content.ITEM_MAP.get(clipDataItem.getText().toString());
+            mItem = ContentController.ITEM_MAP.get(clipDataItem.getText().toString());
             updateContent();
         }
         return true;
@@ -56,16 +57,17 @@ public class ItemDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        assert getArguments() != null;
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             // Load the placeholder content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = Content.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            mItem = ContentController.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         binding = FragmentItemDetailBinding.inflate(inflater, container, false);

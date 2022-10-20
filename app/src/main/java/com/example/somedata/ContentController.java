@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Content {
+public class ContentController {
 
     public static final List<PlaceholderItem> ITEMS = new ArrayList<PlaceholderItem>();
 

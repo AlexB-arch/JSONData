@@ -5,6 +5,7 @@ import android.content.ClipDescription;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -22,22 +23,8 @@ import com.example.somedata.databinding.ItemListContentBinding;
 
 import java.util.List;
 
-/**
- * A fragment representing a list of Items. This fragment
- * has different presentations for handset and larger screen devices. On
- * handsets, the fragment presents a list of items, which when touched,
- * lead to a {@link ItemDetailFragment} representing
- * item details. On larger screens, the Navigation controller presents the list of items and
- * item details side-by-side using two vertical panes.
- */
 public class ItemListFragment extends Fragment {
 
-    /**
-     * Method to intercept global key events in the
-     * item list fragment to trigger keyboard shortcuts
-     * Currently provides a toast when Ctrl + Z and Ctrl + F
-     * are triggered
-     */
     ViewCompat.OnUnhandledKeyEventListenerCompat unhandledKeyEventListenerCompat = (v, event) -> {
         if (event.getKeyCode() == KeyEvent.KEYCODE_Z && event.isCtrlPressed()) {
             Toast.makeText(
@@ -60,7 +47,7 @@ public class ItemListFragment extends Fragment {
     private FragmentItemListBinding binding;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentItemListBinding.inflate(inflater, container, false);
         return binding.getRoot();
@@ -68,7 +55,7 @@ public class ItemListFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         ViewCompat.addOnUnhandledKeyEventListener(view, unhandledKeyEventListenerCompat);
@@ -88,7 +75,7 @@ public class ItemListFragment extends Fragment {
     ) {
 
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(
-                Content.ITEMS,
+                ContentController.ITEMS,
                 itemDetailFragmentContainer
         ));
     }
@@ -102,17 +89,18 @@ public class ItemListFragment extends Fragment {
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<Content.PlaceholderItem> mValues;
+        private final List<ContentController.PlaceholderItem> mValues;
         private final View mItemDetailFragmentContainer;
 
-        SimpleItemRecyclerViewAdapter(List<Content.PlaceholderItem> items,
+        SimpleItemRecyclerViewAdapter(List<ContentController.PlaceholderItem> items,
                                       View itemDetailFragmentContainer) {
             mValues = items;
             mItemDetailFragmentContainer = itemDetailFragmentContainer;
         }
 
+        @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
             ItemListContentBinding binding =
                     ItemListContentBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
@@ -127,8 +115,8 @@ public class ItemListFragment extends Fragment {
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(itemView -> {
-                Content.PlaceholderItem item =
-                        (Content.PlaceholderItem) itemView.getTag();
+                ContentController.PlaceholderItem item =
+                        (ContentController.PlaceholderItem) itemView.getTag();
                 Bundle arguments = new Bundle();
                 arguments.putString(ItemDetailFragment.ARG_ITEM_ID, item.id);
                 if (mItemDetailFragmentContainer != null) {
@@ -138,48 +126,37 @@ public class ItemListFragment extends Fragment {
                     Navigation.findNavController(itemView).navigate(R.id.show_item_detail, arguments);
                 }
             });
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                /*
-                 * Context click listener to handle Right click events
-                 * from mice and trackpad input to provide a more native
-                 * experience on larger screen devices
-                 */
-                holder.itemView.setOnContextClickListener(v -> {
-                    Content.PlaceholderItem item =
-                            (Content.PlaceholderItem) holder.itemView.getTag();
-                    Toast.makeText(
-                            holder.itemView.getContext(),
-                            "Context click of item " + item.id,
-                            Toast.LENGTH_LONG
-                    ).show();
-                    return true;
-                });
-            }
+            /*
+             * Context click listener to handle Right click events
+             * from mice and trackpad input to provide a more native
+             * experience on larger screen devices
+             */
+            holder.itemView.setOnContextClickListener(v -> {
+                ContentController.PlaceholderItem item =
+                        (ContentController.PlaceholderItem) holder.itemView.getTag();
+                Toast.makeText(
+                        holder.itemView.getContext(),
+                        "Context click of item " + item.id,
+                        Toast.LENGTH_LONG
+                ).show();
+                return true;
+            });
             holder.itemView.setOnLongClickListener(v -> {
                 // Setting the item id as the clip data so that the drop target is able to
                 // identify the id of the content
                 ClipData.Item clipItem = new ClipData.Item(mValues.get(position).id);
                 ClipData dragData = new ClipData(
-                        ((Content.PlaceholderItem) v.getTag()).content,
+                        ((ContentController.PlaceholderItem) v.getTag()).content,
                         new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
                         clipItem
                 );
 
-                if (Build.VERSION.SDK_INT >= 24) {
-                    v.startDragAndDrop(
-                            dragData,
-                            new View.DragShadowBuilder(v),
-                            null,
-                            0
-                    );
-                } else {
-                    v.startDrag(
-                            dragData,
-                            new View.DragShadowBuilder(v),
-                            null,
-                            0
-                    );
-                }
+                v.startDragAndDrop(
+                        dragData,
+                        new View.DragShadowBuilder(v),
+                        null,
+                        0
+                );
                 return true;
             });
         }
@@ -189,7 +166,7 @@ public class ItemListFragment extends Fragment {
             return mValues.size();
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder {
+        static class ViewHolder extends RecyclerView.ViewHolder {
             final TextView mIdView;
             final TextView mContentView;
 
