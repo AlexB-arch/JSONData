@@ -20,8 +20,6 @@ import android.widget.Toast;
 import com.example.somedata.databinding.FragmentItemListBinding;
 import com.example.somedata.databinding.ItemListContentBinding;
 
-import com.example.somedata.placeholder.PlaceholderContent;
-
 import java.util.List;
 
 /**
@@ -90,7 +88,7 @@ public class ItemListFragment extends Fragment {
     ) {
 
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(
-                PlaceholderContent.ITEMS,
+                Content.ITEMS,
                 itemDetailFragmentContainer
         ));
     }
@@ -104,10 +102,10 @@ public class ItemListFragment extends Fragment {
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<PlaceholderContent.PlaceholderItem> mValues;
+        private final List<Content.PlaceholderItem> mValues;
         private final View mItemDetailFragmentContainer;
 
-        SimpleItemRecyclerViewAdapter(List<PlaceholderContent.PlaceholderItem> items,
+        SimpleItemRecyclerViewAdapter(List<Content.PlaceholderItem> items,
                                       View itemDetailFragmentContainer) {
             mValues = items;
             mItemDetailFragmentContainer = itemDetailFragmentContainer;
@@ -129,8 +127,8 @@ public class ItemListFragment extends Fragment {
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(itemView -> {
-                PlaceholderContent.PlaceholderItem item =
-                        (PlaceholderContent.PlaceholderItem) itemView.getTag();
+                Content.PlaceholderItem item =
+                        (Content.PlaceholderItem) itemView.getTag();
                 Bundle arguments = new Bundle();
                 arguments.putString(ItemDetailFragment.ARG_ITEM_ID, item.id);
                 if (mItemDetailFragmentContainer != null) {
@@ -147,8 +145,8 @@ public class ItemListFragment extends Fragment {
                  * experience on larger screen devices
                  */
                 holder.itemView.setOnContextClickListener(v -> {
-                    PlaceholderContent.PlaceholderItem item =
-                            (PlaceholderContent.PlaceholderItem) holder.itemView.getTag();
+                    Content.PlaceholderItem item =
+                            (Content.PlaceholderItem) holder.itemView.getTag();
                     Toast.makeText(
                             holder.itemView.getContext(),
                             "Context click of item " + item.id,
@@ -162,7 +160,7 @@ public class ItemListFragment extends Fragment {
                 // identify the id of the content
                 ClipData.Item clipItem = new ClipData.Item(mValues.get(position).id);
                 ClipData dragData = new ClipData(
-                        ((PlaceholderContent.PlaceholderItem) v.getTag()).content,
+                        ((Content.PlaceholderItem) v.getTag()).content,
                         new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
                         clipItem
                 );
