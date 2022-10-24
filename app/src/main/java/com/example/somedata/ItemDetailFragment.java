@@ -1,4 +1,4 @@
-package com.example.jsondata;
+package com.example.somedata;
 
 import android.content.ClipData;
 import android.os.Bundle;
@@ -8,18 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.jsondata.databinding.FragmentItemDetailBinding;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.somedata.databinding.FragmentItemDetailBinding;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -31,14 +21,17 @@ public class ItemDetailFragment extends Fragment {
 
     public static final String ARG_ITEM_ID = "item_id";
 
+    /**
+     * The placeholder content this fragment is presenting.
+     */
+    private ContentController.PlaceholderItem mItem;
     private CollapsingToolbarLayout mToolbarLayout;
     private TextView mTextView;
-    private FloatingActionButton fab;
 
     private final View.OnDragListener dragListener = (v, event) -> {
         if (event.getAction() == DragEvent.ACTION_DROP) {
             ClipData.Item clipDataItem = event.getClipData().getItemAt(0);
-            mItem = CompanyList.ITEM_MAP.get(clipDataItem.getText().toString());
+            mItem = ContentController.ITEM_MAP.get(clipDataItem.getText().toString());
             updateContent();
         }
         return true;
@@ -61,7 +54,7 @@ public class ItemDetailFragment extends Fragment {
             // Load the placeholder content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = CompanyList.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            mItem = ContentController.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
         }
     }
 
@@ -74,7 +67,6 @@ public class ItemDetailFragment extends Fragment {
 
         mToolbarLayout = rootView.findViewById(R.id.toolbar_layout);
         mTextView = binding.itemDetail;
-        fab = rootView.findViewById(R.id.fab);
 
         // Show the placeholder content as text in a TextView & in the toolbar if available.
         updateContent();
@@ -95,38 +87,5 @@ public class ItemDetailFragment extends Fragment {
                 mToolbarLayout.setTitle(mItem.content);
             }
         }
-
-        if (fab != null){
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    pullData();
-                }
-            });
-        }
-    }
-
-    private void pullData(){
-        String url = getResources().getString(R.string.url);
-
-        // Instantiate the RequestQueue
-        RequestQueue requestQueue = Volley.newRequestQueue(requireActivity());
-
-        //Request a string response from the provided url
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                // Display the response string in our convenient existing text view.
-                mTextView.setText("Response is: " + response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // Drop a breakpoint here for troubleshooting later.
-                mTextView.setText("Error. You suck.");
-            }
-        });
-        // Add the request to the RequestQueue
-        requestQueue.add(stringRequest);
     }
 }

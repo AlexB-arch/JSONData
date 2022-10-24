@@ -1,4 +1,4 @@
-package com.example.jsondata;
+package com.example.somedata;
 
 import android.os.Bundle;
 
@@ -9,7 +9,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.jsondata.databinding.ActivityItemDetailBinding;
+import com.example.somedata.databinding.ActivityItemDetailBinding;
 
 public class ItemDetailHostActivity extends AppCompatActivity {
 

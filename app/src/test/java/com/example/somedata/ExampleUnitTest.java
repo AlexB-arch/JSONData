@@ -1,4 +1,4 @@
-package com.example.jsondata;
+package com.example.somedata;
 
 import org.junit.Test;
 
