@@ -3,14 +3,13 @@ package com.example.jsondata;
 import android.content.ClipData;
 import android.os.Bundle;
 import android.view.DragEvent;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,9 +17,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.example.jsondata.placeholder.PlaceholderContent;
 import com.example.jsondata.databinding.FragmentItemDetailBinding;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
@@ -31,16 +29,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  */
 public class ItemDetailFragment extends Fragment {
 
-    /**
-     * The fragment argument representing the item ID that this fragment
-     * represents.
-     */
     public static final String ARG_ITEM_ID = "item_id";
 
-    /**
-     * The placeholder content this fragment is presenting.
-     */
-    private PlaceholderContent.PlaceholderItem mItem;
     private CollapsingToolbarLayout mToolbarLayout;
     private TextView mTextView;
     private FloatingActionButton fab;
@@ -48,7 +38,7 @@ public class ItemDetailFragment extends Fragment {
     private final View.OnDragListener dragListener = (v, event) -> {
         if (event.getAction() == DragEvent.ACTION_DROP) {
             ClipData.Item clipDataItem = event.getClipData().getItemAt(0);
-            mItem = PlaceholderContent.ITEM_MAP.get(clipDataItem.getText().toString());
+            mItem = CompanyList.ITEM_MAP.get(clipDataItem.getText().toString());
             updateContent();
         }
         return true;
@@ -71,7 +61,7 @@ public class ItemDetailFragment extends Fragment {
             // Load the placeholder content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = PlaceholderContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            mItem = CompanyList.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
         }
     }
 
@@ -120,7 +110,7 @@ public class ItemDetailFragment extends Fragment {
         String url = getResources().getString(R.string.url);
 
         // Instantiate the RequestQueue
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        RequestQueue requestQueue = Volley.newRequestQueue(requireActivity());
 
         //Request a string response from the provided url
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {

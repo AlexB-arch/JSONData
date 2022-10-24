@@ -4,12 +4,6 @@ import android.content.ClipData;
 import android.content.ClipDescription;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.core.view.ViewCompat;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,32 +11,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.view.ViewCompat;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.jsondata.databinding.FragmentItemListBinding;
 import com.example.jsondata.databinding.ItemListContentBinding;
-
-import com.example.jsondata.placeholder.PlaceholderContent;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-/**
- * A fragment representing a list of Items. This fragment
- * has different presentations for handset and larger screen devices. On
- * handsets, the fragment presents a list of items, which when touched,
- * lead to a {@link ItemDetailFragment} representing
- * item details. On larger screens, the Navigation controller presents the list of items and
- * item details side-by-side using two vertical panes.
- */
 public class ItemListFragment extends Fragment {
 
     private FloatingActionButton fab;
 
-    /**
-     * Method to intercept global key events in the
-     * item list fragment to trigger keyboard shortcuts
-     * Currently provides a toast when Ctrl + Z and Ctrl + F
-     * are triggered
-     */
     ViewCompat.OnUnhandledKeyEventListenerCompat unhandledKeyEventListenerCompat = (v, event) -> {
         if (event.getKeyCode() == KeyEvent.KEYCODE_Z && event.isCtrlPressed()) {
             Toast.makeText(
@@ -93,7 +76,7 @@ public class ItemListFragment extends Fragment {
     ) {
 
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(
-                PlaceholderContent.ITEMS,
+                CompanyList.ITEMS,
                 itemDetailFragmentContainer
         ));
     }
@@ -107,10 +90,10 @@ public class ItemListFragment extends Fragment {
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<PlaceholderContent.PlaceholderItem> mValues;
+        private final List<CompanyList.PlaceholderItem> mValues;
         private final View mItemDetailFragmentContainer;
 
-        SimpleItemRecyclerViewAdapter(List<PlaceholderContent.PlaceholderItem> items,
+        SimpleItemRecyclerViewAdapter(List<CompanyList.PlaceholderItem> items,
                                       View itemDetailFragmentContainer) {
             mValues = items;
             mItemDetailFragmentContainer = itemDetailFragmentContainer;
@@ -132,8 +115,8 @@ public class ItemListFragment extends Fragment {
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(itemView -> {
-                PlaceholderContent.PlaceholderItem item =
-                        (PlaceholderContent.PlaceholderItem) itemView.getTag();
+                CompanyList.PlaceholderItem item =
+                        (CompanyList.PlaceholderItem) itemView.getTag();
                 Bundle arguments = new Bundle();
                 arguments.putString(ItemDetailFragment.ARG_ITEM_ID, item.id);
                 if (mItemDetailFragmentContainer != null) {
@@ -150,8 +133,8 @@ public class ItemListFragment extends Fragment {
                  * experience on larger screen devices
                  */
                 holder.itemView.setOnContextClickListener(v -> {
-                    PlaceholderContent.PlaceholderItem item =
-                            (PlaceholderContent.PlaceholderItem) holder.itemView.getTag();
+                    CompanyList.PlaceholderItem item =
+                            (CompanyList.PlaceholderItem) holder.itemView.getTag();
                     Toast.makeText(
                             holder.itemView.getContext(),
                             "Context click of item " + item.id,
@@ -165,7 +148,7 @@ public class ItemListFragment extends Fragment {
                 // identify the id of the content
                 ClipData.Item clipItem = new ClipData.Item(mValues.get(position).id);
                 ClipData dragData = new ClipData(
-                        ((PlaceholderContent.PlaceholderItem) v.getTag()).content,
+                        ((CompanyList.PlaceholderItem) v.getTag()).content,
                         new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
                         clipItem
                 );
