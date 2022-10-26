@@ -24,5 +24,10 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".Add_User"
+            android:exported="true"
+            android:parentActivityName=".MainActivity">
+        </activity>
+
     </application>
 </manifest>

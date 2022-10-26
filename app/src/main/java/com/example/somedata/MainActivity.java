@@ -2,8 +2,8 @@ package com.example.somedata;
 
 import static com.google.firebase.database.FirebaseDatabase.getInstance;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,13 +18,12 @@ public class MainActivity extends AppCompatActivity {
 
     // Firebase
     private DatabaseReference databaseReference;
-    // Firebase URL
-    private static final String FIREBASE_URL = "https://sample-data-app-default-rtdb.firebaseio.com";
 
     // Widgets
     private EditText mEditText;
     private Button mButton;
     private TextView mTextView;
+    private Button mAddUserButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,61 +35,40 @@ public class MainActivity extends AppCompatActivity {
         mEditText = findViewById(R.id.writeText);
         mButton = findViewById(R.id.search_button);
         mTextView = findViewById(R.id.readText);
+        mAddUserButton = findViewById(R.id.addUserButton);
 
         // Search button
         mButton.setOnClickListener(v -> {
+            // Get the text
             String text = mEditText.getText().toString();
-            if (!text.isEmpty()) {
-                // Search for the text
-                search(text);
-            }
-        });
-
-        // Add user button
-        findViewById(R.id.addUserButton).setOnClickListener(v -> {
-            // Create a new user
-            User user = new User("John", "email address");
-            // Add the user to the database
-            databaseReference.child("users").child("1").setValue(user);
-        });
-    }
-
-    // Search for the specified text
-    private void search(String text) {
-        // Search for the text
-        databaseReference.child("users").equalTo(text).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                // Get the data
-                DataSnapshot dataSnapshot = task.getResult();
-                // Check if the data exists
-                if (dataSnapshot.exists()) {
+            // Search for the text
+            databaseReference.child("users").equalTo(text).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
                     // Get the data
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    DataSnapshot dataSnapshot = task.getResult();
+                    // Check if the data exists
+                    if (dataSnapshot.exists()) {
                         // Get the data
-                        User user = snapshot.getValue(User.class);
-                        // Check if the data is not null
-                        if (user != null) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             // Get the data
-                            String username = user.username;
-                            String email = user.email;
-                            // Log the data
-                            Log.d(TAG, "search: username: " + username);
-                            Log.d(TAG, "search: email: " + email);
-
-                            // Display the data
-                            mTextView.setText("username: " + username + " email: " + email);
+                            User user = snapshot.getValue(User.class);
+                            // Check if the data is not null
+                            if (user != null) {
+                                // Get the data
+                                String username = user.username;
+                                String firstname = user.firstname;
+                                String lastname = user.lastname;
+                                String email = user.email;
+                                // Do something with the data
+                                mTextView.setText(username + " " + firstname + " " + lastname + " " + email);
+                            }
                         }
                     }
                 }
-            }
+            });
         });
-    }
 
-    // Adds a new user to the database
-    private void addUser() {
-        // Create a new user
-        User user = new User("John", "myemail");
-        // Add the user to the database
-        databaseReference.child("users").push().setValue(user);
+        // Add user button calls Add_User activity
+        mAddUserButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, Add_User.class)));
     }
 }
