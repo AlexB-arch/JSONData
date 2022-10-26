@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "157156143251",
+    "firebase_url": "https://sample-data-app-default-rtdb.firebaseio.com",
     "project_id": "sample-data-app",
     "storage_bucket": "sample-data-app.appspot.com"
   },
